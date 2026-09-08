@@ -1,0 +1,180 @@
+\newpage
+\section{The Build System (CMake)}
+
+FP-Tools uses CMake as its build system. This section covers the reasoning
+behind that choice, the required dependencies, the available build options, and
+step-by-step build instructions. A detailed walkthrough of the 
+\texttt{CMakeLists.txt} file and dependency files themselves are also provided 
+for individuals who want to understand or modify the build system.
+
+\subsection{Why CMake?}
+
+CMake is a cross-platform build system generator that's pretty widely used in
+C++ projects. Rather than needing to specify how to build the code directly, 
+CMake produces native build files for whatever system you are on from a single,
+platform-agnostic, description of the build. This makes it very straightforward 
+for users to install FP-Tools, for example, on either some personal laptop or
+on an HPC machine without maintaining a separate build configuration for each.
+\vspace{1em}
+
+Beyond being extremely portable, CMake has great built-in support for finding
+and linking external dependencies such as FFTW, OpenMP, and MPI (what we need
+for this project!). 
+
+
+\subsection{Requirements and Dependencies}
+
+FP-Tools is supported on Linux, macOS, and HPC systems running Linux. Windows
+is not currently supported. The following table summarizes all of the 
+required and optional dependencies.
+\vspace{1em}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\toprule
+Dependency & Version & Required & Notes \\
+\midrule
+C++ compiler    & C++17 or later  & Yes & GCC $\geq$ 8, Clang $\geq$ 5, 
+                                          Intel $\geq$ 19 \\
+CMake           & $\geq$ 3.24     & Yes & \\
+FFTW3           & $\geq$ 3.3      & Yes & Required for all analyses \\
+OpenMP          & ---             & No  & Enables shared-memory parallelism \\
+MPI             & ---             & No  & Enables distributed parallelism \\
+\bottomrule
+\end{tabular}
+\label{tab:dependencies}
+\end{table}
+
+\subsubsection{Compiler}
+
+FP-Tools requires a C++17-compatible compiler. The following compilers have 
+been tested and should work:
+\begin{itemize}
+    \item GCC $\geq$ 8 -- recommended for Linux and HPC systems
+    \item Clang $\geq$ 5  -- recommended for macOS systems
+    \item Intel C++ Compiler $\geq$ 19
+\end{itemize}
+
+\begin{note}
+    On macOS, the system \texttt{clang} that's provided by XCode's Command Line
+    Tools should be sufficient. On HPC systems, available compilers and their
+    versions can vary, so I'd recommend either checking with your system
+    administrator or load an appropriate module, for example:
+    \begin{verbatim}
+        module load gcc/11.2.0
+    \end{verbatim}
+\end{note}
+
+If you need more detailed installation instructions or encounter any issues that
+may require troubleshooting, see the installation documentation for each 
+respective compiler: 
+\href{https://gcc.gnu.org/wiki/InstallingGCC}{GCC}, 
+\href{https://clang.llvm.org/get_started.html}{Clang},
+\href{https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler-download.html}{Intel}.
+
+\subsubsection{CMake}
+
+CMake version 3.24.0 or later is required. This version included improvements for \texttt{FetchContent} and dependency handling that FP-Tools relies on. You 
+can install CMake via your package manager:
+
+\begin{bashcode}
+# Linux (apt)
+sudo apt install cmake
+
+# macOS (Homebrew)
+brew install cmake
+\end{bashcode}
+
+On HPC machines where you do not have root access, CMake can be installed to a 
+local directory or loaded as a module:
+
+\begin{bashcode}
+module load cmake/3.24.0
+\end{bashcode}
+
+If you need more detailed installation instructions or encounter any issues that
+may require troubleshooting, see the CMake installation documentation 
+\href{https://cmake.org/download/}{here}.
+
+\subsubsection{FFTW3}
+
+FFTW3 (Fastest Fourier Transform in the West) is required for all analyses in
+FP-Tools. It provides the FFT routines used for correlation function
+calculations and, in future versions, for MSD computation. FFTW3 can be
+installed as follows:
+
+\begin{bashcode}
+# Linux (apt)
+sudo apt install libfftw3-dev
+
+# macOS (Homebrew)
+brew install fftw
+\end{bashcode}
+
+On HPC systems, FFTW3 should be available as a module:
+
+\begin{bashcode}
+module load fftw/3.3.10
+\end{bashcode}
+
+If not, you can install FFTW3 without administrator permissions by following the
+installation instructions \href{https://www.fftw.org/fftw2_doc/fftw_6.html}{here}
+and installing the package to a local directory. If FFTW3 is installed in a
+non-standard location, you can point CMake to it using:
+
+\begin{bashcode}
+cmake -B build -DFFTW3_ROOT=/path/to/fftw3
+\end{bashcode}
+
+
+\subsubsection{OpenMP (Optional)}
+
+OpenMP enables shared-memory parallelism within a single node. It's supported by
+all major C++ compilers and shouldn't require any separate installation. You can
+enable it at compile time via a CMake flag (see Section(REF TO CMAKE OPTIONS)). 
+On macOS, the Apple Clang compiler doesn't include OpenMP support by default. If
+you want OpenMP on macOS, install LLVM via Homebrew:
+
+\begin{bashcode}
+brew install llvm libomp
+\end{bashcode}
+
+\subsubsection{MPI (Optional)}
+
+MPI enables distributed-memory parallelism across multiple nodes and is required 
+for large-scale HPC runs. Any MPI implementation is supported, including OpenMPI 
+and MPICH. You can install these using your package manager:
+
+\begin{bashcode}
+# Linux (apt)
+sudo apt install libopenmpi-dev
+
+# Linux (dnf)  
+sudo dnf install openmpi-devel
+
+# macOS (Homebrew)
+brew install open-mpi
+\end{bashcode}
+
+On HPC systems, MPI is almost always available as a module and should be loaded 
+before building the code:
+
+\begin{verbatim}
+module load openmpi/4.1.2
+\end{verbatim}
+
+\subsection{A Comprehensive List of Compilation Flags}
+
+\subsection{Detailed Build Instructions}
+
+\subsection{Troubleshooting Common Errors}
+
+\subsection{The Build System in Detail}
+
+\subsubsection{CMakeLists.txt}
+\subsubsection{FPToolsFunctions.cmake}
+\subsubsection{FFTW.cmake}
+\subsubsection{OpenMP.cmake}
+\subsubsection{MPI.cmake}
+\subsubsection{tests/CMakeLists.txt}

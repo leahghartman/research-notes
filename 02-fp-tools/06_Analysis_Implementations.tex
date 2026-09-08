@@ -1,0 +1,69 @@
+\newpage
+\section{Analysis Implementations}
+
+a brief overview here about what will be covered in this section.
+
+\subsection{Mean Squared Displacement}
+
+This is a section that goes over the mathematical background that is followed
+or was followed while implementing the code. Mean squared displacement is a 
+quantity that allows us to see how far a particle's position deviates from a 
+reference point over time. The MSD at a time $t$ is defined as the following
+ensemble average:
+
+\begin{equation*}
+    MSD = \langle| \mathbf{x}(t) - \mathbf{x}(0)|\rangle = \frac{1}{N} \sum_{i=1}^N 
+    |\mathbf{x}^{(i)}(t) - x^{(i)}(0)|^2.
+\end{equation*}
+
+Maybe also mention something in this section about MSD for different lags. Also
+maybe discuss what we should see/what MSD should look like and what the 
+characteristics of a specific plot mean (the inflection point, etc.).
+
+
+
+\subsection{Radial Distribution Function}
+
+This section should go over the mathematical background of the radial
+distribution function calculation. Specifically, what expression/whatever is 
+actually used in the code to calculate the RDF. Maybe in these sections or in 
+the implementation sections, we could put in addition to the actual code, just
+some pseudo-code for thinking about how the code should be implemented in the
+first place. Then, the rest is just a C++-specific implementation.
+
+Again, also describe here certain features in the plots (should go to 1 for
+large distances, what each peak represents, etc.)
+
+The radial distribution or pair correlation function, describes how density
+varies as a function of distance from some reference particle. It is given by:
+
+EQUATION/CALCULATION HERE
+
+
+\subsection{First Passage Times}
+
+Don't forget to add citations for Jerome's paper in this section.
+
+The mean first passage time is given by:
+\begin{equation*}
+    \mathcal{F}(r) = \int_{0}^{\infty} dt t f(r, t) = - \frac{\partial \hat{f}(r,s)}{\partial s}
+\end{equation*}
+We also have a quantity, the logarithmic derivative of this quantity, which we're 
+using to make the quantity or see the feature ...
+
+\begin{equation*}
+    D(r) = \frac{d \ln{\mathcal{F}(r)}}{d \ln{r}}.
+\end{equation*}
+
+
+\subsection{Correlation Functions}
+
+\subsubsection{Velocity Autocorrelation Functions}
+
+\subsubsection{Current Correlation Functions}
+
+\subsubsection{Structure Factors}
+
+\subsubsection{Intermediate Scattering}
+
+\subsubsection{Custom Correlations}

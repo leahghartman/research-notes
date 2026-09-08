@@ -1,0 +1,80 @@
+\newpage
+\section{A Brief Introduction to the FP-Tools Code}
+
+FP-Tools is a molecular dynamics trajectory analysis code written in C++ and 
+developed at Los Alamos National Laboratory. It was originally written to be
+the first distributable implementation of first-passage time (FPT) statistics,
+but has since grown to include a larger set of standard molecular dynamics
+analysis routines. At present, the code is a self-contained toolkit for 
+calculating structural and dynamical properties of materials from molecular 
+dynamics trajectories.
+
+\subsection{Features}
+
+FP-Tools currently supports the following analyses:
+\begin{itemize}
+    \item Mean squared displacement (MSD)
+    \item Radial distribution function (RDF)
+    \item Mean first passage time and the local log-derivative $D(r)$
+    \item A correlation function calculator with built-in support for:
+        \begin{itemize}
+            \item Velocity autocorrelation function (VACF)
+            \item Longitudinal and transverse current correlation functions
+            \item Dynamic structure factor, $S(q, \omega)$
+            \item Static structure factor, $S(q)$
+            \item Intermediate scattering function, $F(q, t)$
+        \end{itemize}
+    \item A custom correlation function calculator for arbitrary user-specified
+    time series
+\end{itemize}
+
+\subsection{Supported Formats}
+
+FP-Tools can read trajectories in the following formats:
+\begin{itemize}
+    \item LAMMPS custom dump
+    \item XYZ
+    \item VASP XDATCAR
+    \item Unformatted Fortran binary
+\end{itemize}
+
+The unformatted Fortran binary reader is designed specifically for 
+trajectories produced by a classical MD code written in-house at LANL, 
+and is not guaranteed to be compatible with other Fortran binary trajectory 
+formats, which vary between codes.
+
+Trajectory format is detected automatically from file content rather than file
+extension. Velocity data may optionally be provided as a separate file in any
+supported format and is ... (FINISH THIS)
+
+\subsection{Comparison to Existing Tools}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Feature & FP-Tools & MDAnalysis & LiquidLib & LAMMPS \\
+\midrule
+MSD                  & \checkmark & \checkmark & \checkmark & \checkmark \\
+RDF                  & \checkmark & \checkmark & \checkmark & \checkmark \\
+MFPT                 & \checkmark & $\times$   & $\times$   & $\times$   \\
+$D(r)$               & \checkmark & $\times$   & $\times$   & $\times$   \\
+VACF                 & \checkmark & \checkmark & \checkmark & \checkmark \\
+Current correlations & \checkmark & $\times$   & \checkmark & $\times$   \\
+Dynamic $S(q,\omega)$& \checkmark & $\times$   & \checkmark & $\times$   \\
+LAMMPS format        & \checkmark & \checkmark & \checkmark & ---        \\
+VASP format          & \checkmark & \checkmark & $\times$   & $\times$   \\
+Fortran binary       & \checkmark & $\times$   & $\times$   & $\times$   \\
+OpenMP               & \checkmark & $\times$   & \checkmark & \checkmark \\
+MPI                  & \checkmark & $\times$   & \checkmark & \checkmark \\
+Python API           & \checkmark & \checkmark & $\times$   & $\times$   \\
+\bottomrule
+\end{tabular}
+\caption{Feature comparison between FP-Tools and commonly used MD analysis 
+codes. $\checkmark$ indicates supported, $\times$ indicates not supported.}
+\label{tab:comparison}
+\end{table}
+
+\subsection{Quick Start}
+
+\subsection{How to Cite}
