@@ -9,7 +9,7 @@
     amsmath, amsthm, amssymb, mathtools, dsfont, units, physics,
     graphicx, wrapfig, float, booktabs, changepage,
     listings, inconsolata, pythonhighlight, subcaption,
-    fancyhdr, sectsty, hyperref, enumerate, enumitem }
+    fancyhdr, hyperref, enumerate, enumitem, float }
 
 % Load minted separately -- requires -shell-escape
 \usepackage[most, minted]{tcolorbox}
@@ -17,7 +17,7 @@
 % -- Page layout settings ---------------
 
 % Set page margins
-\usepackage[margin=3cm, a4paper, footskip=0.1mm]{geometry}
+\usepackage[margin=3cm, a4paper, footskip=12mm]{geometry}
 
 % Anchor footnotes to the bottom of the page
 \usepackage[bottom]{footmisc}
@@ -57,18 +57,14 @@
 
 % Reduce spacing between sections in table of contents
 \setlength{\cftbeforesecskip}{0.9ex}
-
-% Remove indentation for sections
 \cftsetindents{section}{0em}{0em}
-
-% Set font size (\huge) for table of contents title
 \renewcommand{\cfttoctitlefont}{\Large\bfseries}
 
-% Remove numbers/bullets from section titles in table of contents
-\makeatletter
-\renewcommand{\cftsecpresnum}{\begin{lrbox}{\@tempboxa}}
-\renewcommand{\cftsecaftersnum}{\end{lrbox}}
-\makeatother
+% SAFE WAY: Remove section numbering width constraints in TOC 
+% instead of opening unclosed \lrbox structures
+\setcounter{tocdepth}{3} 
+\renewcommand{\cftsecnumwidth}{0pt} 
+\renewcommand{\cftsecindent}{0pt}
 
 % -- Set path for images ----------------
 \graphicspath{{figures/}{../figures/}}
@@ -155,19 +151,6 @@
         linecolor=NavyBlue, backgroundcolor=NavyBlue!1,
     },
 ]{thmexplanationbox}
-
-
-% \declaretheorem[style=thmgreenbox, name=Key Idea]{definition}
-% \declaretheorem[style=thmbluebox, numbered=no, name=Example]{eg}
-% \declaretheorem[style=thmredbox, name=Claim]{prop}
-% \declaretheorem[style=thmredbox, name=Theorem]{theorem}
-%
-% \declaretheorem[style=thmproofbox, name=Proof]{replacementproof}
-% \renewenvironment{proof}[1][\proofname]{\vspace{-10pt}\begin{replacementproof}}{\end{replacementproof}}
-%
-%
-% \declaretheorem[style=thmexplanationbox, name=Explanation]{tmpexplanation}
-% \newenvironment{explanation}[1][]{\vspace{-10pt}\begin{tmpexplanation}}{\end{tmpexplanation}}
 
 \declaretheorem[style=thmgreenbox, name=Key Idea]{definition}
 \declaretheorem[style=thmbluebox, numbered=no, name=Example]{eg}
@@ -259,13 +242,16 @@
 }
 
 % -- Left/right header text -------------
-
-% Do not include a line under the header or above the footer
+\usepackage{fancyhdr}
 \pagestyle{fancy}
-\renewcommand{\footrulewidth}{0pt}
-\renewcommand{\headrulewidth}{0pt}
+\fancyhf{} % Explicitly reset everything safely
 
-% Right header text: section and title
-\renewcommand{\sectionmark}[1]{\markright{#1} }
-\fancyhead[R]{\small\textit{\nouppercase{\rightmark}}}
+\setlength{\headheight}{15pt}
+\renewcommand{\footrulewidth}{0pt}
 \renewcommand{\headrulewidth}{0.4pt}
+
+% Use the native automated marking engine safely
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+\fancyhead[R]{\small\textit{\nouppercase{\rightmark}}}
+\fancyfoot[C]{\thepage}

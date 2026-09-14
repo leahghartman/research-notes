@@ -155,10 +155,8 @@ from literature were also reproduced as part of this process.
         # Ez/E0 and dn/n0 should match the analytic expression BEHIND the
         # laser pulse (so, after it's already passed through, this is what the
         # wake should look like)
-        Ez_E0[behind] = -(np.pi/4) * a0**2 
-                        * np.cos(k_p * (zeta[behind] - zeta_pulse_end))
-        dn_n0[behind] = -(np.pi/4) * a0**2 
-                        * np.sin(k_p * (zeta[behind] - zeta_pulse_end))
+        Ez_E0[behind] = -(np.pi/4) * a0**2 * np.cos(k_p * (zeta[behind] - zeta_pulse_end))
+        dn_n0[behind] = -(np.pi/4) * a0**2 * np.sin(k_p * (zeta[behind] - zeta_pulse_end))
 
         # Return the analytic result
         return Ez_E0, dn_n0
@@ -261,10 +259,7 @@ from literature were also reproduced as part of this process.
         max_step = (2*np.pi/k_pulse) / 20.0
 
         # Solve the system given all of this information
-        sol = solve_ivp(rhs, [zeta_range[0], zeta_range[1]], y0,
-                        t_eval=zeta_eval,
-                        method='RK45', rtol=1e-8, atol=1e-10,
-                        max_step=max_step)
+        sol = solve_ivp(rhs, [zeta_range[0], zeta_range[1]], y0, t_eval=zeta_eval, method='RK45', rtol=1e-8, atol=1e-10, max_step=max_step)
 
         zeta_sol = sol.t
         phi = sol.y[0]
@@ -282,24 +277,18 @@ from literature were also reproduced as part of this process.
     \end{pythoncode}
 
     Using this, we can replicate Figure 8 in the Esarey paper:
-    \begin{figure}[htb!]
-      \centering
-      \includegraphics[width=\linewidth]{figures/validation-1D/nonlinear-figure.png}
-      \caption{}
-      \label{fig:}
-    \end{figure}
     
-    \subsubsection{Gaussian Pulse $a_0=0.5$: Setup}
+    \subsubsection{Gaussian Pulse : Setup}
 
         
 
-    \subsubsection{Gaussian Pulse $a_0=0.5$: Results}
+    \subsubsection{Gaussian Pulse : Results}
 
 
-    \subsubsection{Gaussian Pulse $a_0=2.0$: Setup}
+    \subsubsection{Gaussian Pulse : Setup}
 
 
-    \subsubsection{Gaussian Pulse $a_0=2.0$: Results}
+    \subsubsection{Gaussian Pulse : Results}
 
 
 
