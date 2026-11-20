@@ -15,7 +15,7 @@ section.
 
 Here we will cover....
 
-\subsubsection*{Discretizing the Equations of Motion}
+\subsubsection{Discretizing the Equations of Motion}
 
 The ray equations are derived in the Theoretical Background section and are only
 restated here. In OSIRIS units (lengths normalized by $c/\omega_{p0}$, times
@@ -52,7 +52,6 @@ integrator should:
 The comparison across the next few sections evaluates how each integration 
 scheme meets the above requirements.
 
-\subsubsection{The Photon Equations of Motion}
 \subsubsection{Naive Leapfrog Implementation}
 We start from a Hamiltonian which is separated into a kinetic part that depends
 only on momentum and a potential part that depends only on position: 
@@ -88,11 +87,42 @@ are a few different types:
 Leapfrog is the standard in PIC codes for a few reasons:
 \begin{enumerate}
 
-    \item 
+    \item \textbf{Time-reversible:} if you advance the solution from some
+    initial condition to a future point, you can then make that point your new
+    initial condition and step back to where you started.
+
+    \item \textbf{Symplectic:} preserves the phase-space area/volumn (in 
+    canonical units).
+
+    \item \textbf{Explicit:} calculates a future state directly with the 
+    current available information, at the cost of being conditionally stable
+    and requiring smaller timesteps.
 
 \end{enumerate}
 
+\paragraph{Why leapfrog won't work for this case.} The Hamiltonian for a 
+photon in this situation is $H = \omega = \sqrt{k^2 + n_e(x)}$, which isn't 
+separable. $\omega$ depends on both $x$ and $k$, so neither $\dot{x} = k/\omega$
+or $\dot{k} = -(1/2\omega)\nabla n_e$ can be written as a function of one 
+variable alone. Because leapfrog isn't even well-defined or applicable in its
+usual form this way, we look for other integrators.
+
+You can see the consequences of this in the following single-photon test
+
 \subsubsection{The Predictor-Corrector Method}
+\paragraph{Why not a symplectic or implicit method?} A simple way to keep the
+symplectic property for a non-separable Hamiltonian (while also maintaining only
+second-order accuracy) is the lowest-order symplectic Runge-Kutta method. 
+To turn RK2 symplectic, one can use ...., which as a side effect also makes the
+integrator implicit (the implicit midpoint rule):
+
+EQN HERE
+
+\paragraph{The scheme.} The scheme chosen for the photon kinetic module is an 
+explicit trapezoidal predictor-corrector method (Heun's method). In general, 
+these update equations are given by:
+
+
 \subsubsection{Accuracy and Stability}
 
 
