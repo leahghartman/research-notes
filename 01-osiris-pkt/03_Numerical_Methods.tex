@@ -1,9 +1,97 @@
 \newpage
 \section{Numerical Methods}
 
+This section describes the numerical methods used in the photon kinetics
+module in OSIRIS. It begins with how the photons are advanced (Time Integration),
+how photon and electron densities are deposited onto the grid (Density
+Deposition), how their gradients are calculated (Gradient Deposition), how
+the grid quantities are filtered (Smoothing and Filtering), and conventions
+for the units. This section assumes that you've read the Theoretical Background 
+section, which contains the equations of motion that will be discretized here.
+To see the  code that is actually implemented, see the OSIRIS Implementation 
+section.
+
 \subsection{Time Integration}
+
+Here we will cover....
+
+\subsubsection*{Discretizing the Equations of Motion}
+
+The ray equations are derived in the Theoretical Background section and are only
+restated here. In OSIRIS units (lengths normalized by $c/\omega_{p0}$, times
+normalized by $1/\omega_{p0}$, density normalized by $n_0$), a photon 
+macro-particle with position $\mathbf{x}$ and wavenumber $\mathbf{k}$ obeys
+\begin{equation*}
+    \frac{d\mathbf{x}}{dt} = \frac{\mathbf{k}}{\omega}\,,
+    \qquad
+    \frac{d\mathbf{k}}{dt} = -\frac{1}{2\,\omega}\nabla n_e\,,
+    \qquad
+    \omega = \sqrt{|\mathbf{k}|^{2} + n_e(\mathbf{x})}\,.
+    \label{eq:ray_equations}
+\end{equation*}
+
+\paragraph{What has to be discretized.}
+Time is advanced in  ...
+
+\paragraph{What the integrator should do.} We ultimately care about how this
+code performs for the application of photon acceleration, in which the quantity
+we care about is the wavenumber, $\mathbf{k}$. Any kind of numerical drift in
+$\mathbf{k}$ will therefore appear as an unphysical frequency drift. The 
+integrator should:
+\begin{enumerate}
+
+    \item \textbf{Not let $\omega$ drift.} In a stationary medium, $\omega$ is
+    exactly conserved, ...
+
+    \item \textbf{Be second order accurate.} We'd like to match the accuracy of
+    the rest of the OSIRIS code, so this rules out integrators like RK4.
+
+    \item \textbf{Use as little gathers as possible.} This is basically expensive
+
+\end{enumerate}
+The comparison across the next few sections evaluates how each integration 
+scheme meets the above requirements.
+
 \subsubsection{The Photon Equations of Motion}
 \subsubsection{Naive Leapfrog Implementation}
+We start from a Hamiltonian which is separated into a kinetic part that depends
+only on momentum and a potential part that depends only on position: 
+$H(\mathbf{q}, \mathbf{p}) = T(\mathbf{p}) + V(\mathbf{x})$.
+
+In the above cases where the Hamiltonian is separable, the equations of motion
+are given by
+\begin{align*}
+    \dot{\mathbf{q}} &= \nabla_{\mathbf{p}} \, H(\mathbf{q}, \mathbf{p}) = \nabla_
+    {\mathbf{p}} \, T(\mathbf{p}), \\
+    \dot{\mathbf{p}} &= -\nabla_{\mathbf{q}} \, H(\mathbf{q}, \mathbf{p}) = -\nabla_
+    {\mathbf{q}} \, V(\mathbf{q}). 
+\end{align*}
+Each piece can be integrated exactly on its own: a solution for the coordinates
+can be found if the momenta are kept constant and vice versa. These solutions 
+can be combined in a time-symmetric fashion to give you the leapfrog method. There
+are a few different types:
+\begin{itemize}
+
+    \item \textbf{Staggered Leapfrog.} This is the standard in PIC codes and what
+    I'll be referring to from this point forward. This framing updates the
+    position and velocity at interleaved times.
+
+    \item \textbf{Velocity Verlet/Position Verlet.} These are mathematically
+    equivalent to staggered Leapfrog, but synchronizes positions and velocities
+    to the same integer timesteps. The difference between the velocity or
+    position Verlet algorithms is simply the order of the updates.
+
+    \item \textbf{Central-Difference Leapfrog.}
+
+\end{itemize}
+
+Leapfrog is the standard in PIC codes for a few reasons:
+\begin{enumerate}
+
+    \item 
+
+\end{enumerate}
+
 \subsubsection{The Predictor-Corrector Method}
 \subsubsection{Accuracy and Stability}
 
